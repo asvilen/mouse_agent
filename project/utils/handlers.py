@@ -61,12 +61,13 @@ async def websocket_handler(request):
 
 
 async def http_handler(request):
-    return web.FileResponse('./index.html')
+    path_to_index = os.path.join('.', 'index.html')
+    return web.FileResponse(path_to_index)
 
 
 async def image_handler(request):
     filename = request.match_info.get('filename')
-    file_path = os.path.join(os.path.dirname(__file__), '../images', filename)
+    file_path = os.path.join('.', 'images', filename)
 
     if os.path.exists(file_path):
         return web.FileResponse(file_path)
