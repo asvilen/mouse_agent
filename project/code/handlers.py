@@ -2,9 +2,9 @@ import asyncio
 from aiohttp import web
 import os
 
-from mouse import MouseEventHandler
-from camera import CameraHandler
-from sqlite_db import save_to_database
+from code.mouse import MouseEventHandler
+from code.camera import CameraHandler
+from code.sqlite_db import save_to_database
 
 REFRESH_TIME = 0.01
 TAKE_PHOTO_ON = 'Released'  # Mouse button being either 'Pressed' or 'Released'
@@ -61,12 +61,12 @@ async def websocket_handler(request):
 
 
 async def http_handler(request):
-    return web.FileResponse('index.html')
+    return web.FileResponse('../index.html')
 
 
 async def image_handler(request):
     filename = request.match_info.get('filename')
-    file_path = os.path.join(os.path.dirname(__file__), 'images', filename)
+    file_path = os.path.join(os.path.dirname(__file__), '../images', filename)
 
     if os.path.exists(file_path):
         return web.FileResponse(file_path)

@@ -1,7 +1,7 @@
 import asyncio
 from aiohttp import web
 
-from handlers import websocket_handler, http_handler, image_handler
+from code.handlers import websocket_handler, http_handler, image_handler
 
 
 async def main():
