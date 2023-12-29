@@ -2,9 +2,9 @@ import asyncio
 from aiohttp import web
 import os
 
-from code.mouse import MouseEventHandler
-from code.camera import CameraHandler
-from code.sqlite_db import save_to_database
+from utils.mouse import MouseEventHandler
+from utils.camera import CameraHandler
+from utils.sqlite_db import save_to_database
 
 REFRESH_TIME = 0.01
 TAKE_PHOTO_ON = 'Released'  # Mouse button being either 'Pressed' or 'Released'
