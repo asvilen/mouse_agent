@@ -2,6 +2,7 @@ import cv2
 import os
 from uuid import uuid4
 from datetime import datetime
+import time
 
 
 class CameraHandler:
@@ -18,7 +19,11 @@ class CameraHandler:
 
         # Image capture logic
         cap = cv2.VideoCapture(0)
+        # Allow the camera to stabilize after last shot
+        time.sleep(2)
+        # Get the photo
         ret, frame = cap.read()
+        # Save it
         cv2.imwrite(self.relative_file_path, frame)
         cap.release()
 
