@@ -1,0 +1,4 @@
+asyncio
+aiohttp
+pynput
+opencv-python

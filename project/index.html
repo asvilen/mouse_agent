@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouse Agent</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+
+        .coordinate-group {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        #photoContainer {
+            max-width: 100%;
+            max-height: 80vh; /* Adjust the maximum height as needed */
+            overflow: hidden; /* Hide overflow if the image exceeds the maximum size */
+        }
+
+        /* Style for the image itself */
+        #photoImg {
+            max-width: 100%;
+            max-height: 100%;
+            display: block; /* Ensure the image is treated as a block element */
+            margin: auto; /* Center the image horizontally */
+        }
+    </style>
+</head>
+<body>
+    <div class="coordinate-group" id="eventType">Event Type: N/A</div>
+    <div class="coordinate-group" id="coordinates">
+        <div>Mouse Coordinates:</div>
+        <div id="x">x: 0,</div>
+        <div id="y">y: 0</div>
+    </div>
+    <div class="coordinate-group" id="buttonClicked">Last Button Clicked: N/A</div>
+    <div class="coordinate-group" id="action">Last Action: N/A</div>
+    <div class="coordinate-group" id="photo">
+        <div>Last Taken Photo:</div>
+        <img id="photoImg" alt="Photo">
+    </div>
+
+    <script>
+        const socket = new WebSocket('ws://localhost:8080/ws');
+
+        let lastX = 0;
+        let lastY = 0;
+        let lastEventType = 'N/A';
+        let lastButtonClicked = 'N/A';
+        let lastAction = 'N/A';
+        let lastPhoto = 'N/A';
+
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+
+            // Update x and y with last known values if not present in the received data
+            document.getElementById('x').innerText = `x: ${data.x !== undefined ? data.x : lastX}`;
+            document.getElementById('y').innerText = `y: ${data.y !== undefined ? data.y : lastY}`;
+
+            // Update other elements with last known values if not present in the received data
+            document.getElementById('eventType').innerText = `Event Type: ${data.event_type !== undefined ? data.event_type : lastEventType}`;
+            document.getElementById('buttonClicked').innerText = `Last Button Clicked: ${data.button !== undefined ? data.button : lastButtonClicked}`;
+            document.getElementById('action').innerText = `Last Action: ${data.action !== undefined ? data.action : lastAction}`;
+
+            // Update last known values
+            lastX = data.x !== undefined ? data.x : lastX;
+            lastY = data.y !== undefined ? data.y : lastY;
+            lastEventType = data.event_type !== undefined ? data.event_type : lastEventType;
+            lastButtonClicked = data.button !== undefined ? data.button : lastButtonClicked;
+            lastAction = data.action !== undefined ? data.action : lastAction;
+
+            if (data.image_path !== undefined) {
+                lastPhoto = data.image_path;
+                const imgElement = document.getElementById('photoImg');
+                imgElement.src = `http://localhost:8080/${lastPhoto}`;
+                imgElement.alt = 'Photo';
+                imgElement.style.display = 'block';
+            }
+        };
+    </script>
+</body>
+</html>
