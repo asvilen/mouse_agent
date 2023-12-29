@@ -61,7 +61,7 @@ async def websocket_handler(request):
 
 
 async def http_handler(request):
-    return web.FileResponse('../index.html')
+    return web.FileResponse('./index.html')
 
 
 async def image_handler(request):
